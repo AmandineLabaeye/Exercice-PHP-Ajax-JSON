@@ -2,19 +2,19 @@
  * Created by sstienface on 25/01/2019.
  */
 
-function ajaxCall(params)
-{
-    if(params)
-    {
+function ajaxCall(params) {
+
+    if (params) {
 
         var url = params.url;
+
         var parameters = '?';
-        for(var i in params.parameters)
-        {
-            parameters+=Object.keys(params.parameters[i])[0]+"="+params.parameters[i][Object.keys(params.parameters[i])[0]];
+
+        for (var i in params.parameters) {
+            parameters += Object.keys(params.parameters[i])[0] + "=" + params.parameters[i][Object.keys(params.parameters[i])[0]];
         }
 
-        url+=parameters;
+        url += parameters;
 
         var xhttp = new XMLHttpRequest();
 
@@ -22,35 +22,47 @@ function ajaxCall(params)
 
         document.getElementById('ajaxContent').innerHTML = "<div>Chargement en cour ...</div>";
 
-        xhttp.onreadystatechange = function()
-        {
-            if(this.readyState == 4 && this.status == 200)
-            {
+        xhttp.onreadystatechange = function () {
+
+            if (this.readyState == 4 && this.status == 200) {
+
                 document.getElementById('ajaxContent').innerHTML = "";
+
                 var json = JSON.parse(this.responseText);
 
-                switch(params.parameters[0].action)
-                {
+                switch (params.parameters[0].action) {
+
                     case"affProducts":
 
-                        for(var i in json)
-                        {
+                        for (var i in json) {
+
                             var div = document.createElement('div');
-                            div.innerHTML = "<h1>"+json[i].product_name+"</h1>";
-                            div.innerHTML+= "<p>"+json[i].product_description+"</p>";
+                            div.innerHTML = "<h1>" + json[i].product_name + "</h1>";
+                            div.innerHTML += "<p>" + json[i].product_description + "</p>";
                             document.getElementById('ajaxContent').appendChild(div);
 
                         }
 
                         break;
+
                     case"affPurchased":
 
                         //Votre code ici
+                        for (var y in json) {
+
+                            var Diiv = document.createElement("div");
+                            Diiv.innerHTML = "<h1>" + json[y].product_name + "</h1>";
+                            Diiv.innerHTML += "<p>" + json[y].buyer_name + "</p>";
+                            document.getElementById('ajaxContent').appendChild(Diiv);
+
+                        }
 
                         break;
 
                     default:
+
                         alert("Parametre non géré");
+
                         break;
 
                 }
@@ -59,24 +71,24 @@ function ajaxCall(params)
             }
         };
 
-        xhttp.open("GET",url,true);
+        xhttp.open("GET", url, true);
 
         xhttp.send();
 
 
-
-        console.log("Sent an http request :"+url);
+        console.log("Sent an http request :" + url);
 
 
     }
 }
 
-document.getElementById('affProducts').addEventListener('click', function()
-{
+document.getElementById('affProducts').addEventListener('click', function () {
+
     ajaxCall(
-        {'url' : 'ajax.php',
-         'parameters' : [
-                {'action' : 'affProducts'}
+        {
+            'url': 'ajax.php',
+            'parameters': [
+                {'action': 'affProducts'}
             ]
         }
     );
@@ -85,3 +97,16 @@ document.getElementById('affProducts').addEventListener('click', function()
 
 
 //Ajouter un event listener pour detecter le click sur le second lien
+
+document.getElementById("affPurchased").addEventListener("click", function () {
+
+    ajaxCall(
+        {
+            'url': 'ajax.php',
+            'parameters': [
+                {'action': 'affPurchased'}
+            ]
+        }
+    )
+
+});
